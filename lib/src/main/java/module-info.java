@@ -1,6 +1,8 @@
 module com.auth0.jwt {
     // remove transitive in next major release
     requires com.fasterxml.jackson.databind;
+    requires aws.java.sdk.kms;
+    requires kotlin.stdlib;
     // remove in next major release
     exports com.auth0.jwt.impl;
 

@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'com.auth0.gradle.oss-library.java'
+    id 'org.jetbrains.kotlin.jvm' version '1.5.21'
 }
 
 logger.lifecycle("Using version ${version} for ${group}.${name}")
@@ -41,6 +42,21 @@ compileJava {
     options.compilerArgs = ['--release', "8"]
 }
 
+compileKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "1.8"
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "1.8"
+    }
+}
+
+
 javadoc {
     // Exclude internal implementation package from javadoc
     excludes = ['com/auth0/jwt/impl', 'module-info.java']
@@ -48,6 +64,8 @@ javadoc {
 
 dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+    implementation 'com.amazonaws:aws-java-sdk-kms:1.12.65'
     testImplementation 'org.bouncycastle:bcprov-jdk15on:1.60'
     testImplementation 'junit:junit:4.12'
     testImplementation 'net.jodah:concurrentunit:0.4.3'
