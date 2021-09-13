@@ -8,12 +8,10 @@ import java.nio.ByteBuffer
 import java.util.Base64
 
 class KMSClientAlgorithm(
-    name: String,
-    description: String,
     private val kmsClient: KMSClient,
     private val kmsKeyId: String,
     private val kmsSigningAlgorithm: String,
-) : Algorithm(name, description)
+) : Algorithm("KMS_$kmsSigningAlgorithm", "KMS Encryption using $kmsSigningAlgorithm")
 {
     override fun verify(jwt: DecodedJWT)
     {
@@ -41,7 +39,14 @@ class KMSClientAlgorithm(
         }
     }
 
-    override fun sign(contentBytes: ByteArray?): ByteArray
+    override fun sign(headerBytes: ByteArray, payloadBytes: ByteArray): ByteArray
+    {
+        val dotByte = '.'.code.toByte()
+        val contentBytes = headerBytes.plus(dotByte).plus(payloadBytes)
+        return this.sign(contentBytes)
+    }
+
+    override fun sign(contentBytes: ByteArray): ByteArray
     {
         try
         {
